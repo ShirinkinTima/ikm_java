@@ -59,7 +59,30 @@
 
 code Text
 
-    `src/main/java/com/example/demo/ ├── controllers/            # Слой обработки HTTP-запросов │   ├── MainController      # Переадресация и навигация │   ├── OrderController     # Логика управления заказами (Core logic) │   ├── AdminController     # Управление справочниками (Клиенты, Авто, Услуги) │   └── GlobalExceptionHandler # Глобальный перехват ошибок ├── models/                 # Слой сущностей (Entities) │   ├── Client              # Клиенты (ID, ФИО, Телефон) │   ├── Vehicle             # Автомобили (ID, Модель, Госномер, Владелец) │   ├── ServiceCatalog      # Услуги (ID, Название, Цена) │   └── ServiceOrder        # Заказы (ID, Дата, Авто, Услуга, Статус) ├── repositories/           # Слой доступа к данным (Spring Data JPA) │   ├── ClientRepository │   ├── VehicleRepository │   ├── ServiceCatalogRepository │   └── ServiceOrderRepository └── DemoApplication.java    # Точка входа в приложение  src/main/resources/ ├── templates/              # HTML-шаблоны Thymeleaf │   ├── admin/              # Страницы справочников и их редактирования │   ├── orders/             # Страницы журнала заказов и формы создания │   └── error-page.html     # Кастомная страница ошибок ├── application.properties  # Конфигурация БД и приложения └── data.sql                # Скрипт первичной инициализации данных`
+    `src/main/java/com/example/demo/ 
+    ├── controllers/            # Слой обработки HTTP-запросов 
+    │   ├── MainController      # Переадресация и навигация 
+    │   ├── OrderController     # Логика управления заказами (Core logic) 
+    │   ├── AdminController     # Управление справочниками (Клиенты, Авто, Услуги) 
+    │   └── GlobalExceptionHandler # Глобальный перехват ошибок 
+    ├── models/                 # Слой сущностей (Entities) 
+    │   ├── Client              # Клиенты (ID, ФИО, Телефон) 
+    │   ├── Vehicle             # Автомобили (ID, Модель, Госномер, Владелец) 
+    │   ├── ServiceCatalog      # Услуги (ID, Название, Цена) 
+    │   └── ServiceOrder        # Заказы (ID, Дата, Авто, Услуга, Статус) 
+    ├── repositories/           # Слой доступа к данным (Spring Data JPA) 
+    │   ├── ClientRepository 
+    │   ├── VehicleRepository 
+    ├── ServiceCatalogRepository 
+    │   └── ServiceOrderRepository 
+    └── DemoApplication.java    # Точка входа в приложение  
+    src/main/resources/ 
+    ├── templates/              # HTML-шаблоны Thymeleaf 
+    │   ├── admin/              # Страницы справочников и их редактирования 
+    │   ├── orders/             # Страницы журнала заказов и формы создания
+    │   └── error-page.html     # Кастомная страница ошибок 
+    ├── application.properties  # Конфигурация БД и приложения 
+    └── data.sql                # Скрипт первичной инициализации данных`
   
 
 ---
