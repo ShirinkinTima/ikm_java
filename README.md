@@ -144,13 +144,29 @@ code Text
 
 Для проверки работоспособности системы рекомендуется выполнить следующие сценарии:
 
-1. **Проверка дубликатов:** Попробуйте создать две одинаковые услуги с одним названием — система заблокирует вторую попытку.
+1. **Проверка дубликатов:**
+<img width="1689" height="438" alt="{9F2CA846-F8E8-4A8F-B925-DA6BB5C057AA}" src="https://github.com/user-attachments/assets/89e8e8d4-9643-4abf-acd0-67477a7a062e" />  
+
+<img width="721" height="773" alt="{118FF2E4-19FE-4F3B-A3D1-ABA5B77872C1}" src="https://github.com/user-attachments/assets/e607243f-68f1-4d26-b7c4-b40fd0382999" />
+
     
-2. **Проверка связей:** Попробуйте удалить услугу, которая уже есть в журнале заказов — система выдаст предупреждение о невозможности действия.
+2. **Проверка связей:** 
+<img width="1647" height="435" alt="{CAD71391-3436-4A1E-AA1C-D4BCC3256807}" src="https://github.com/user-attachments/assets/096355df-4af2-4905-89f2-f176124863fd" />  
+
+<img width="663" height="747" alt="{5D8F41F8-8AF1-46D5-BBBB-4340020BFBEF}" src="https://github.com/user-attachments/assets/d7152ee0-924c-4938-864d-c8fe37c556c1" />
+
     
-3. **Проверка создания "на лету":** При создании заказа нажмите переключатель "Новое авто", введите данные и убедитесь, что после сохранения заказа новая машина появилась во вкладке "Авто".
+3. **Проверка создания авто в журнале:**
+   <img width="831" height="922" alt="{954637A7-B846-4A1C-A02F-8D07179F135F}" src="https://github.com/user-attachments/assets/0846b976-cc91-4154-952c-ba9977367e98" />
+   <img width="1672" height="493" alt="{D444F997-C78D-431A-B66B-FA050F032E79}" src="https://github.com/user-attachments/assets/740ec365-824c-42fb-b831-30fc2de5a089" />  
+<img width="1635" height="432" alt="{FA24B7BC-2353-4AC7-9EC4-EF6236F3BEAA}" src="https://github.com/user-attachments/assets/def2de9b-02b4-4e30-9a2d-75e167e281f2" />
+
+
+
     
-4. **Валидация:** Попробуйте сохранить заказ с пустой датой — поле подсветится красным цветом с требованием заполнения.
+5. **Обработка указания даты:**.
+ <img width="794" height="394" alt="{B94427AA-B6CB-4B48-94C4-296C75338501}" src="https://github.com/user-attachments/assets/e2ef81c2-1c3d-4802-9c24-b9508a0c8a8e" />
+
     
 
 ---
