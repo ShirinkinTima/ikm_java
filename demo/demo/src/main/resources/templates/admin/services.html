@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Услуги | СТО</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+<!-- Навигация -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/"><i class="bi bi-gear-wide-connected"></i> СТО "Профи"</a>
+        <div class="navbar-nav">
+            <a class="nav-link" href="/orders">Заказы</a>
+            <a class="nav-link" href="/clients">Клиенты</a>
+            <a class="nav-link" href="/vehicles">Авто</a>
+            <a class="nav-link active fw-bold text-info" href="/services">Услуги</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Алерты об ошибках удаления или успехе -->
+    <div th:if="${error}" class="alert alert-danger shadow-sm" th:text="${error}"></div>
+    <div th:if="${success}" class="alert alert-success shadow-sm" th:text="${success}"></div>
+
+    <div class="row mt-4">
+        <!-- Форма добавления новой услуги -->
+        <div class="col-md-4">
+            <div class="card p-4 shadow-sm border-0 mb-4">
+                <h5 class="mb-3 text-primary"><i class="bi bi-plus-circle"></i> Новая услуга</h5>
+                <form th:action="@{/services/save}" th:object="${newService}" method="post">
+                    <div class="mb-2">
+                        <label class="small fw-bold">Название услуги</label>
+                        <input type="text" th:field="*{title}" class="form-control" required>
+                        <div class="text-danger small" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="small fw-bold">Цена (руб.)</label>
+                        <input type="number" step="0.01" th:field="*{price}" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Добавить</button>
+                </form>
+            </div>
+            <a href="/orders" class="btn btn-outline-secondary w-100"><i class="bi bi-arrow-left"></i> На главную</a>
+        </div>
+
+        <!-- Таблица списка услуг -->
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 overflow-hidden">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Услуга</th>
+                        <th>Цена</th>
+                        <th class="text-center">Действие</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="s : ${services}">
+                        <td th:text="${s.id}"></td>
+                        <td th:text="${s.title}"></td>
+                        <td class="fw-bold text-success" th:text="${s.price} + ' р.'"></td>
+                        <td class="text-center">
+                            <div class="btn-group shadow-sm">
+                                <!-- ВАЖНО: Ссылка должна начинаться со слэша / -->
+                                <a th:href="@{'/services/edit/' + ${s.id}}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i> Ред.
+                                </a>
+                                <a th:href="@{'/services/delete/' + ${s.id}}" class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Удалить услугу из каталога?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

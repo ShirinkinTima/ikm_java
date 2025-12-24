@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Должности</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="/works">Автосервис</a>
+        <div class="navbar-nav">
+            <a class="nav-link active" href="/admin/positions">Должности</a>
+            <a class="nav-link" href="/admin/masters">Мастера</a>
+            <a class="nav-link" href="/admin/services">Услуги</a>
+            <a class="nav-link" href="/admin/clients">Клиенты</a>
+            <a class="nav-link" href="/admin/orders">Заказы</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white">Новая должность</div>
+                <div class="card-body">
+                    <form th:action="@{/admin/positions/save}" th:object="${newPosition}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Название</label>
+                            <input type="text" th:field="*{name}" class="form-control" placeholder="Механик" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Разряд</label>
+                            <input type="number" th:field="*{grade}" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ставка (руб/час)</label>
+                            <input type="number" th:field="*{rate}" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <table class="table table-white table-hover shadow-sm bg-white">
+                <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Должность</th>
+                    <th>Разряд</th>
+                    <th>Ставка</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${positions}">
+                    <td th:text="${p.id}"></td>
+                    <td th:text="${p.name}"></td>
+                    <td th:text="${p.grade}"></td>
+                    <td th:text="${p.rate}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

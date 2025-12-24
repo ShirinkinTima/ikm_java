@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Оформление заказа | СТО</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card { border-radius: 15px; border: none; }
+        .section-title { font-size: 0.85rem; font-weight: bold; color: #6c757d; text-transform: uppercase; }
+        /* Красная рамка для полей с ошибками */
+        .is-invalid { border-color: #dc3545 !important; background-image: none !important; }
+    </style>
+    <script>
+        // Этот скрипт нужен только для кликов пользователя,
+        // а начальное состояние теперь контролирует HTML (Thymeleaf)
+        function toggleUI() {
+            const isNewV = document.getElementById('isNewVehicle').checked;
+            const isNewC = document.getElementById('isNewClient').checked;
+
+            document.getElementById('existingVehicleSection').style.display = isNewV ? 'none' : 'block';
+            document.getElementById('newVehicleFields').style.display = isNewV ? 'block' : 'none';
+            document.getElementById('ownerSection').style.display = isNewV ? 'block' : 'none';
+
+            document.getElementById('existingClientSection').style.display = (isNewV && !isNewC) ? 'block' : 'none';
+            document.getElementById('newClientFields').style.display = (isNewV && isNewC) ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body class="bg-light p-4">
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <form th:action="@{/orders/save}" th:object="${order}" method="post">
+                <input type="hidden" th:field="*{id}">
+
+                <div class="card shadow-lg mb-4">
+                    <div class="card-header bg-primary text-white py-3 text-center">
+                        <h4 class="mb-0" th:text="${order.id == null ? 'Новый заказ' : 'Редактирование'}"></h4>
+                    </div>
+
+                    <div class="card-body p-4">
+
+                        <!-- БЛОК: АВТОМОБИЛЬ -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="section-title">Автомобиль</span>
+                                <div class="form-check form-switch">
+                                    <!-- HTML магия: галочка будет нажата, если в полях новой машины есть ошибки -->
+                                    <input class="form-check-input" type="checkbox" id="isNewVehicle" onchange="toggleUI()"
+                                           th:checked="${#fields.hasErrors('vehicle.model') || #fields.hasErrors('vehicle.plateNumber')}">
+                                    <label class="form-check-label small" for="isNewVehicle">Новое авто</label>
+                                </div>
+                            </div>
+
+                            <!-- Выбор существующего -->
+                            <div id="existingVehicleSection"
+                                 th:style="${#fields.hasErrors('vehicle.model') || #fields.hasErrors('vehicle.plateNumber')} ? 'display:none' : 'display:block'">
+                                <select th:field="*{vehicle}" class="form-select">
+                                    <option value="">-- Выберите авто --</option>
+                                    <option th:each="v : ${vehicles}" th:value="${v.id}" th:text="${v.model + ' [' + v.plateNumber + ']'}"></option>
+                                </select>
+                            </div>
+
+                            <!-- Поля для нового авто -->
+                            <div id="newVehicleFields" class="p-3 bg-light rounded border"
+                                 th:style="${#fields.hasErrors('vehicle.model') || #fields.hasErrors('vehicle.plateNumber')} ? 'display:block' : 'display:none'">
+                                <input type="text" th:field="*{vehicle.model}" class="form-control mb-2" placeholder="Марка/Модель"
+                                       th:classappend="${#fields.hasErrors('vehicle.model')} ? 'is-invalid'">
+                                <div class="text-danger small mb-2" th:errors="*{vehicle.model}"></div>
+
+                                <input type="text" th:field="*{vehicle.plateNumber}" class="form-control" placeholder="Госномер"
+                                       th:classappend="${#fields.hasErrors('vehicle.plateNumber')} ? 'is-invalid'">
+                                <div class="text-danger small" th:errors="*{vehicle.plateNumber}"></div>
+                            </div>
+                        </div>
+
+                        <!-- БЛОК: ВЛАДЕЛЕЦ (показывается только для нового авто) -->
+                        <div id="ownerSection" class="mb-4"
+                             th:style="${#fields.hasErrors('vehicle.model') || #fields.hasErrors('vehicle.plateNumber') || #fields.hasErrors('vehicle.owner.*')} ? 'display:block' : 'display:none'">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="section-title text-info">Владелец</span>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="isNewClient" onchange="toggleUI()"
+                                           th:checked="${#fields.hasErrors('vehicle.owner.fullName') || #fields.hasErrors('vehicle.owner.phone')}">
+                                    <label class="form-check-label small" for="isNewClient">Новый клиент</label>
+                                </div>
+                            </div>
+
+                            <div id="existingClientSection"
+                                 th:style="${#fields.hasErrors('vehicle.owner.fullName') || #fields.hasErrors('vehicle.owner.phone')} ? 'display:none' : 'display:block'">
+                                <select th:field="*{vehicle.owner}" class="form-select">
+                                    <option th:each="cl : ${clients}" th:value="${cl.id}" th:text="${cl.fullName}"></option>
+                                </select>
+                            </div>
+
+                            <div id="newClientFields" class="p-3 bg-light rounded border"
+                                 th:style="${#fields.hasErrors('vehicle.owner.fullName') || #fields.hasErrors('vehicle.owner.phone')} ? 'display:block' : 'display:none'">
+                                <input type="text" th:field="*{vehicle.owner.fullName}" class="form-control mb-2" placeholder="ФИО владельца"
+                                       th:classappend="${#fields.hasErrors('vehicle.owner.fullName')} ? 'is-invalid'">
+                                <div class="text-danger small mb-2" th:errors="*{vehicle.owner.fullName}"></div>
+
+                                <input type="text" th:field="*{vehicle.owner.phone}" class="form-control" placeholder="Телефон"
+                                       th:classappend="${#fields.hasErrors('vehicle.owner.phone')} ? 'is-invalid'">
+                                <div class="text-danger small" th:errors="*{vehicle.owner.phone}"></div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- УСЛУГА И ДАТА -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Услуга</label>
+                            <select th:field="*{service}" class="form-select">
+                                <option th:each="s : ${services}" th:value="${s.id}" th:text="${s.title + ' (' + s.price + ' р.)'}"></option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label small fw-bold">Дата</label>
+                                <input type="date" th:field="*{orderDate}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('orderDate')} ? 'is-invalid'">
+                                <div class="text-danger small" th:errors="*{orderDate}"></div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label small fw-bold">Статус</label>
+                                <select th:field="*{status}" class="form-select">
+                                    <option value="Принято">Принято</option>
+                                    <option value="В работе">В работе</option>
+                                    <option value="Готово">Готово</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 py-2 mt-3 fw-bold">СОХРАНИТЬ ЗАКАЗ</button>
+                        <a href="/orders" class="btn btn-link w-100 mt-2 text-muted">Отмена</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

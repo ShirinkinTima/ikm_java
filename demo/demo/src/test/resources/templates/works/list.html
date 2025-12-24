@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Журнал работ | Автосервис</title>
+    <!-- Подключаем Bootstrap 5 для красивого интерфейса -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Подключаем иконки (по желанию) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        .table-v-align td { vertical-align: middle; }
+        .card { border: none; border-radius: 12px; }
+        .navbar { border-bottom: 3px solid #0d6efd; }
+    </style>
+</head>
+<body class="bg-light">
+
+<!-- Навигационная панель -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/works">
+            <i class="bi bi-gear-fill me-2"></i>Автосервис "Профи"
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/works">Журнал работ</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-info" href="#" id="adminDrop" role="button" data-bs-toggle="dropdown">
+                        Управление (Админ)
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/admin/orders">Заказы</a></li>
+                        <li><a class="dropdown-item" href="/admin/masters">Мастера</a></li>
+                        <li><a class="dropdown-item" href="/admin/services">Справочник услуг</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/admin/clients">Клиенты</a></li>
+                        <li><a class="dropdown-item" href="/admin/positions">Должности</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container pb-5">
+
+    <!-- Сообщение об ошибке (если пришло из контроллера) -->
+    <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <strong>Ошибка!</strong> Невозможно выполнить действие. Возможно, данные связаны с другими записями.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Заголовок и кнопка добавить -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0">Работа в заказах</h2>
+            <p class="text-muted">Операционный журнал выполненных услуг</p>
+        </div>
+        <a th:href="@{/works/add}" class="btn btn-primary shadow">
+            <i class="bi bi-plus-lg me-1"></i> Добавить запись
+        </a>
+    </div>
+
+    <!-- Основная таблица -->
+    <div class="card shadow">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-v-align mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th class="ps-4">№ Заказа</th>
+                        <th>Услуга</th>
+                        <th class="text-center">Кол-во</th>
+                        <th>Цена (ед.)</th>
+                        <th>Дата установки цены</th>
+                        <th class="text-primary">Итоговая стоимость</th>
+                        <th class="text-center pe-4">Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Цикл по работам -->
+                    <tr th:each="w : ${works}">
+                        <td class="ps-4">
+                            <span class="badge bg-secondary" th:text="${w.order?.id ?: '—'}"></span>
+                        </td>
+                        <td>
+                            <div class="fw-bold" th:text="${w.service?.name ?: 'Услуга удалена'}"></div>
+                            <small class="text-muted" th:if="${w.service != null}"
+                                   th:text="'Норматив: ' + ${w.service.normTime} + ' ч.'"></small>
+                        </td>
+                        <td class="text-center" th:text="${w.quantity}"></td>
+                        <td th:text="${#numbers.formatDecimal(w.pricePerUnit, 1, 2, 'POINT')} + ' р.'"></td>
+                        <td th:text="${w.priceDate}"></td>
+                        <td class="fw-bold text-success">
+                            <!-- Безопасное умножение: если значения null, подставляем 0 -->
+                            <span th:text="${#numbers.formatDecimal((w.quantity ?: 0) * (w.pricePerUnit ?: 0), 1, 2, 'POINT')} + ' р.'"></span>
+                        </td>
+                        <td class="text-center pe-4">
+                            <div class="btn-group">
+                                <a th:href="@{'/works/delete/' + ${w.id}}"
+                                   class="btn btn-outline-danger btn-sm"
+                                   onclick="return confirm('Вы уверены, что хотите удалить эту запись из журнала?')">
+                                    <i class="bi bi-trash"></i> Удалить
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Сообщение, если список пуст -->
+                    <tr th:if="${works.isEmpty()}">
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                            В журнале пока нет записей. Нажмите кнопку "Добавить", чтобы внести данные.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Футер страницы -->
+    <footer class="mt-5 text-center text-muted">
+        <small>&copy; 2025 Учебный проект "Автосервис". База данных: PostgreSQL.</small>
+    </footer>
+</div>
+
+<!-- Скрипты Bootstrap (необходимы для работы выпадающих списков) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

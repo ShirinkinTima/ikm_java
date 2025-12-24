@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Внимание | Ошибка</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        body { height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; }
+        .error-card { max-width: 500px; border-radius: 20px; border: none; }
+        .icon-box { font-size: 5rem; color: #ffc107; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container text-center">
+    <div class="card shadow-lg error-card p-5 mx-auto bg-white">
+        <div class="icon-box">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+
+        <h2 class="fw-bold text-dark mb-3">Ой! Возникла проблема</h2>
+
+        <div class="alert alert-warning border-0 py-3 mb-4 shadow-sm">
+            <!-- Здесь будет текст из GlobalExceptionHandler -->
+            <span class="fw-bold" th:text="${errorMessage}">Описание технической ошибки.</span>
+        </div>
+
+        <p class="text-muted mb-4">
+            Данные не были потеряны. Пожалуйста, вернитесь назад и попробуйте заполнить форму иначе или проверьте связи записей.
+        </p>
+
+        <div class="d-grid gap-2">
+            <a href="/" class="btn btn-primary btn-lg rounded-pill shadow">
+                <i class="bi bi-house-door me-2"></i>На главную страницу
+            </a>
+            <button onclick="history.back()" class="btn btn-outline-secondary rounded-pill">
+                Вернуться назад
+            </button>
+        </div>
+    </div>
+
+    <p class="mt-4 text-muted small">ID технической сессии: <span th:text="${#execInfo.now.timeInMillis}"></span></p>
+</div>
+
+</body>
+</html>
